@@ -22,8 +22,8 @@ def make_timestamp_now_hash():
 def stt2_google_rq(audio_path):
     try:
         recognizer_name = stt2_get_recognizer()
-        # if recognizer_name is None:
-        #     recognizer_name = stt2_create_recognizer()
+        if recognizer_name is None:
+            recognizer_name = stt2_create_recognizer()
 
         with io.open(audio_path, "rb") as f:
             content = f.read()
