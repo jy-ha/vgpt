@@ -64,7 +64,7 @@ def recursive_function_generation(code_template, function_name):
 def create_code(quest):
     quest = quest.strip()
 
-    # 1. 코드 템플릿 생성 (함수 기반)
+    # 1. Create code template
     # code_template = generate_template(quest)
     code_template = """while True:
     # Generate Python code
@@ -83,7 +83,7 @@ def create_code(quest):
     if result != 'success':
         code = fix_code(code)"""
 
-    # 2. 생성해야할 함수 목록 생성
+    # 2. Extract undefined functions from code template
     # undefined_functions = extract_functions(code_template)
     undefined_functions = [
         "generate_code_using_openai_api",
@@ -94,13 +94,10 @@ def create_code(quest):
     ]
 
     for undefined_function in undefined_functions:
-        # 3. 개별 함수 코드 생성
-        sub_functions = recursive_function_generation(code_template, undefined_function)
+        # 3. generate each function
+        sub_function = recursive_function_generation(code_template, undefined_function)
 
-        # 4. 개별 함수 코드 조합
-        pass
-
-    # 6. 최종 함수 생성
+    # 6. Create Final code
     return
 
 
