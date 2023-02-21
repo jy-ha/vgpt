@@ -9,10 +9,10 @@ load_dotenv()
 
 
 # name of the gcp project
-GCP_PROJECT_ID = os.environ("GCP_PROJECT_ID")
+GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 
 # api key for openai
-OPENAI_API_KEY = os.environ("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Language code of the audio
 LANGUAGE_CODE = "ko-KR"
