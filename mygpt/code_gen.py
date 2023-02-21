@@ -1,4 +1,4 @@
-from .main import gpt3_text_completion
+from .core_api import gpt3_text_completion
 
 
 def generate_template(text):

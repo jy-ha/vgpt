@@ -1,5 +1,5 @@
-import code_gen
-from core_api import gpt3_text_completion
+from . import code_gen
+from .core_api import gpt3_text_completion
 
 
 def ask_simple_question(text):

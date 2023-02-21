@@ -1,6 +1,6 @@
 import requests
 import json
-from ..config import OPENAI_API_KEY
+from config import OPENAI_API_KEY
 
 
 def gpt3_text_completion(text, model="text-babbage-001", max_tokens=256, temperature=0.5):
