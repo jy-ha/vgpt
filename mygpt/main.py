@@ -26,4 +26,3 @@ Decision: """ % text
     if answer == "N":
         return False
     return True
-

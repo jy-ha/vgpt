@@ -1,19 +1,27 @@
+import traceback
+
 from .core_api import gpt3_text_completion
 
 
 def generate_template(text):
-    text = """Generate Python code to return an answer for the prompt or excute the prompt.
+    text = (
+        """Generate Python code to return an answer for the prompt or excute the prompt.
 If code is too long or fuctionally seperatable, using custom function name. You don't have to define it.
-Prompt: %s\n\n""" % text
+Prompt: %s\n\n"""
+        % text
+    )
     answer = gpt3_text_completion(text, "text-davinci-003", 1024, 0.5)
     return answer
 
 
 def extract_functions(text):
-    text = """Find and List undefined functions from the Python code and join string with ','.
+    text = (
+        """Find and List undefined functions from the Python code and join string with ','.
 If there is no undefined function, say 'no'.
 Prompt: %s
-Undefined functions: """ % text
+Undefined functions: """
+        % text
+    )
     answer = gpt3_text_completion(text, "text-davinci-003", 512, 0.5)
     if answer == "no":
         return []
@@ -24,20 +32,33 @@ Undefined functions: """ % text
 def generate_function(code_template, function_name):
     text = """Define proper Python function '%s' for a given code.
 If code is too long or fuctionally seperatable, using custom function name. You don't have to define it.
-Entire code:\n%s\n\n""" % (function_name, code_template)
-    # 평가도해야함
+Entire code:\n%s\n\n""" % (
+        function_name,
+        code_template,
+    )
     answer = gpt3_text_completion(text, "text-davinci-003", 1024, 0.5)
     return answer
 
 
 def recursive_function_generation(code_template, function_name):
-    function_list = []
-    function = generate_function(code_template, function_name)
-    undefined_functions = extract_functions(function)
+    function_list = [generate_function(code_template, function_name)]
+    undefined_functions = extract_functions(function_list[0])
     for undefined_function in undefined_functions:
-        sub_function = recursive_function_generation(function, undefined_function)
-        function_list.extend(sub_function)
-    return function_list
+        sub_function = recursive_function_generation(
+            function_list[0], undefined_function
+        )
+        function_list.append(sub_function)
+
+    # concat sub_functions
+    final_function = "\n\n".join(function_list)
+
+    # Evaluate generated function
+    try:
+        exec(final_function)
+    except Exception:
+        print(traceback.format_exc())
+
+    return final_function
 
 
 def create_code(quest):
@@ -63,13 +84,19 @@ def create_code(quest):
         code = fix_code(code)"""
 
     # 2. 생성해야할 함수 목록 생성
-    #undefined_functions = extract_functions(code_template)
-    undefined_functions = ["generate_code_using_openai_api", "save_file", "execute_code", "evaluate_output", "fix_code"]
-    
+    # undefined_functions = extract_functions(code_template)
+    undefined_functions = [
+        "generate_code_using_openai_api",
+        "save_file",
+        "execute_code",
+        "evaluate_output",
+        "fix_code",
+    ]
+
     for undefined_function in undefined_functions:
         # 3. 개별 함수 코드 생성
         sub_functions = recursive_function_generation(code_template, undefined_function)
-        
+
         # 4. 개별 함수 코드 조합
         pass
 
