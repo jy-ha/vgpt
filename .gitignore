@@ -1,3 +1,5 @@
 .env
 *.wav
 __pycache__/
+.vscode
+debug.py

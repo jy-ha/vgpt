@@ -10,7 +10,7 @@ THRESHOLD_START = 1024
 THRESHOLD_SPEAK = 512
 CHUNK_SIZE = 1024
 FORMAT = pyaudio.paInt16
-RATE = 44100 # 16000
+RATE = 44100  # 16000
 MAXIMUM = 16384
 
 
@@ -20,21 +20,23 @@ def is_silent(snd_data, threshold):
 
 def normalize(snd_data):
     "Average the volume out"
-    times = float(MAXIMUM)/max(abs(i) for i in snd_data)
+    times = float(MAXIMUM) / max(abs(i) for i in snd_data)
 
-    r = array('h')
+    r = array("h")
     for i in snd_data:
-        r.append(int(i*times))
+        r.append(int(i * times))
     return r
+
 
 def trim(snd_data):
     "Trim the blank spots at the start and end"
+
     def _trim(snd_data):
         snd_started = False
-        r = array('h')
+        r = array("h")
 
         for i in snd_data:
-            if not snd_started and abs(i)>THRESHOLD_SPEAK:
+            if not snd_started and abs(i) > THRESHOLD_SPEAK:
                 snd_started = True
                 r.append(i)
 
@@ -51,23 +53,30 @@ def trim(snd_data):
     snd_data.reverse()
     return snd_data
 
+
 def add_silence(snd_data, seconds):
     "Add silence to the start and end of 'snd_data' of length 'seconds' (float)"
     silence = [0] * int(seconds * RATE)
-    r = array('h', silence)
+    r = array("h", silence)
     r.extend(snd_data)
     r.extend(silence)
     return r
 
-def record(audio_file, second = None):
+
+def record(audio_file, second=None):
     p = pyaudio.PyAudio()
-    stream = p.open(format=FORMAT, channels=1, rate=RATE,
-        input=True, output=True,
-        frames_per_buffer=CHUNK_SIZE)
+    stream = p.open(
+        format=FORMAT,
+        channels=1,
+        rate=RATE,
+        input=True,
+        output=True,
+        frames_per_buffer=CHUNK_SIZE,
+    )
 
     snd_started = False
 
-    r = array('h')
+    r = array("h")
 
     count = 0
     time_start = time.time()
@@ -76,8 +85,8 @@ def record(audio_file, second = None):
     while 1:
         # little endian, signed short
         count += 1
-        snd_data = array('h', stream.read(CHUNK_SIZE))
-        if byteorder == 'big':
+        snd_data = array("h", stream.read(CHUNK_SIZE))
+        if byteorder == "big":
             snd_data.byteswap()
         r.extend(snd_data)
 
@@ -88,7 +97,7 @@ def record(audio_file, second = None):
                     print("start capture...")
                     time_start = time.time()
                     snd_started = True
-                    r = array('h')
+                    r = array("h")
                     r.extend(snd_data)
 
             if snd_started and (time.time() - time_last_speak) > 1:
@@ -108,8 +117,8 @@ def record(audio_file, second = None):
     r = trim(r)
     r = add_silence(r, 0.5)
 
-    data = pack('<' + ('h'*len(r)), *r)
-    wf = wave.open(audio_file, 'wb')
+    data = pack("<" + ("h" * len(r)), *r)
+    wf = wave.open(audio_file, "wb")
     wf.setnchannels(1)
     wf.setsampwidth(sample_width)
     wf.setframerate(RATE)
@@ -119,5 +128,5 @@ def record(audio_file, second = None):
     return sample_width, data, total_time
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     record("demo.wav", 5)

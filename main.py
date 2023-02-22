@@ -12,7 +12,7 @@ if __name__ == "__main__":
         transcript = stt2_google_rq(AUDIO_FILE)
         if transcript is None:
             continue
-        
+
         if mygpt.is_excutable_command(transcript):
             answer = mygpt.ask_simple_question(transcript)
             print(answer)

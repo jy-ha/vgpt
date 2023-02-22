@@ -9,7 +9,8 @@ def ask_simple_question(text):
 
 def is_excutable_command(text):
     text = text.strip()
-    text = """Decide prompt is either excutable command(Y) using internet and computer or not(N).
+    text = (
+        """Decide prompt is either excutable command(Y) using internet and computer or not(N).
 
 Prompt: Find how to get to the library.
 Decision: Y
@@ -21,9 +22,10 @@ Prompt: what is color of the sky
 Decision: Y
 
 Prompt: %s\n
-Decision: """ % text
+Decision: """
+        % text
+    )
     answer = gpt3_text_completion(text, "text-babbage-001", 256, 0.2)
     if answer == "N":
         return False
     return True
-

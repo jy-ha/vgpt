@@ -4,6 +4,7 @@ import datetime
 import hashlib
 from google.cloud import speech_v2 as stt2
 from google.cloud.speech_v2.types import cloud_speech
+
 # from google.cloud import texttospeech as tts
 from config import LANGUAGE_CODE, GCP_PROJECT_ID, RECOGNIZER_ID
 
@@ -36,9 +37,14 @@ def stt2_google_rq(audio_path):
 
         # Transcribes the audio into text
         response = stt2_client.recognize(request=request)
-        transcript = " ".join([result.alternatives[0].transcript.strip() for result in response.results])
+        transcript = " ".join(
+            [result.alternatives[0].transcript.strip() for result in response.results]
+        )
         if len(transcript) == 0:
-            print(str(response.metadata.total_billed_duration) + " : No Recognizable Audio")
+            print(
+                str(response.metadata.total_billed_duration)
+                + " : No Recognizable Audio"
+            )
             return None
         print(str(response.metadata.total_billed_duration) + " : " + transcript)
         return transcript
@@ -81,7 +87,7 @@ def stt2_get_recognizer():
 #     try:
 #         synthesis_input = tts.SynthesisInput(text=text)
 #         voice = tts.VoiceSelectionParams(
-#             language_code=LANGUAGE_CODE, 
+#             language_code=LANGUAGE_CODE,
 #             ssml_gender=tts.SsmlVoiceGender.NEUTRAL
 #         )
 #         audio_config = tts.AudioConfig(
