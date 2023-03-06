@@ -1,9 +1,9 @@
-from .core_api import gpt3_text_completion
+from .core_api import gpt3_text_completion, gpt_chat
 
 
 def ask_simple_question(text):
     text = text.strip()
-    answer = gpt3_text_completion(text, "text-davinci-003", 256, 0.4)
+    answer = gpt_chat(text, 512, 1.0)
     return answer
 
 
@@ -25,7 +25,7 @@ Prompt: %s\n
 Decision: """
         % text
     )
-    answer = gpt3_text_completion(text, "text-babbage-001", 256, 0.2)
+    answer = gpt_chat(text, 256, 0.2)
     if answer == "N":
         return False
     return True
