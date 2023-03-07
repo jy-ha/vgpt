@@ -4,7 +4,7 @@
 
 1. Auto-Record your voice 
 2. Convert it to the text
-3. Ask to GPT-3
+3. Ask to GPT-3.5 (ChatGPT Turbo model)
 
 >Not working on WSL (pyaudio cannot access to your microphone)
 
